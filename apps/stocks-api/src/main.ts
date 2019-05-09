@@ -2,31 +2,25 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  **/
-import { Server } from 'hapi';
 
-const init = async () => {
-  const server = new Server({
-    port: 3333,
-    host: 'localhost'
-  });
+import * as http from "http";
+import * as url from "url";
 
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return {
-        hello: 'world'
-      };
+const request = require('request');
+
+const onRequest = (req, res) => {
+    const queryData = url.parse(req.url, true).query;
+    if (queryData.url) {
+        request({
+            url: queryData.url
+          }).on('error', function(e) {
+              res.end(e);
+          }).pipe(res);
     }
-  });
+    else {
+        res.end('no url found');
+    }
+}
 
-  await server.start();
-  console.log('Server running on %s', server.info.uri);
-};
-
-process.on('unhandledRejection', err => {
-  console.log(err);
-  process.exit(1);
-});
-
-init();
+http.createServer(onRequest).listen(3333);
+console.log('Server running on 3333');
