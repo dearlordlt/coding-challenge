@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Observable } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'coding-challenge-chart',
@@ -14,6 +15,9 @@ import { Observable } from 'rxjs';
 })
 export class ChartComponent implements OnInit {
   @Input() data$: Observable<any>;
+  @Input() fromDate: string;
+  @Input() toDate: string;
+
   chartData: any;
 
   chart: {
@@ -23,7 +27,8 @@ export class ChartComponent implements OnInit {
     columnNames: string[];
     options: any;
   };
-  constructor(private cd: ChangeDetectorRef) {}
+
+  constructor(private cd: ChangeDetectorRef, private datePipe: DatePipe) {}
 
   ngOnInit() {
     this.chart = {
@@ -34,6 +39,13 @@ export class ChartComponent implements OnInit {
       options: { title: `Stock price`, width: '600', height: '400' }
     };
 
-    this.data$.subscribe(newData => (this.chartData = newData));
+    this.data$.subscribe(newData => {
+      this.chartData = newData.filter(record =>
+        record[0] >= this.formatDate(this.fromDate) && record[0] <= this.formatDate(this.toDate));
+    });
+  }
+
+  formatDate(date: string) {
+    return this.datePipe.transform(date, 'yyyy-MM-dd');
   }
 }
