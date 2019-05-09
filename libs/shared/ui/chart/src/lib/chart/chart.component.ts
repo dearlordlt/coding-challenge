@@ -40,8 +40,7 @@ export class ChartComponent implements OnInit {
     };
 
     this.data$.subscribe(newData => {
-      this.chartData = newData.filter(record =>
-        record[0] >= this.formatDate(this.fromDate) && record[0] <= this.formatDate(this.toDate));
+      this.chartData = newData.filter(record => record[0] >= this.formatDate(this.fromDate) && record[0] <= this.formatDate(this.toDate));
     });
   }
 

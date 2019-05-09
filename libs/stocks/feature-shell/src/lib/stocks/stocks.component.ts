@@ -26,8 +26,8 @@ export class StocksComponent implements OnInit {
   constructor(private fb: FormBuilder, private priceQuery: PriceQueryFacade, private datePipe: DatePipe) {
     this.stockPickerForm = fb.group({
       symbol: [null, Validators.required],
-      fromDate: [{value: null, disabled: true}, Validators.required],
-      toDate: [{value: null, disabled: true}, Validators.required]
+      fromDate: [null, Validators.required],
+      toDate: [null, Validators.required]
     });
   }
 
